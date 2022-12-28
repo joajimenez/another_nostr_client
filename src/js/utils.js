@@ -14,10 +14,11 @@ export function formatTimeElapsed(timestamp) {
 
 export function extractNameAndPicture(obj) {
   if (obj.kind === 0) {
-    const { name, pubKey, picture } = JSON.parse(obj.content);
+    const { name, pubkey, picture } = JSON.parse(obj.content);
     caches.open('my-cache').then((cache) => {
-      cache.put(pubKey, { name, picture });
+      cache.put(pubkey, { name, picture }); // store name and picture directly in cache
     });
+    console.log('name and picture extracted', name, picture);
   }
 }
 
@@ -26,18 +27,72 @@ export function createNoteCardFromCache(obj) {
     const pubKey = obj.pubKey;
     const content = obj.content;
     const timestamp = obj.created_at;
+    const name = 'Anon';
+    const picture = 'https://i.pravatar.cc/150'; // define picture here
 
     caches.open('my-cache').then((cache) => {
       cache.match(pubKey).then((response) => {
         if (response) {
-          const { name, picture } = response;
+          const { name, picture } = response; // retrieve name and picture directly from response
           createNoteCard(name, picture, content, timestamp);
+          console.log('yes response');
         } else if (!response) {
-          const name = 'Anonymous';
-          const picture = 'https://i.imgur.com/3ZmQ2Lw.png';
           createNoteCard(name, picture, content, timestamp);
+          console.log('no response');
         }
       });
     });
   }
+}
+
+// let create the note cards
+async function createNoteCard(name, picture, content, timestamp) {
+  const noteCard = document.createElement('div');
+  noteCard.classList.add('note-card');
+  noteCard.innerHTML = `
+      <div class="note-card-header">
+          <div class="note-profile-picture">
+          <img
+              src="${picture}"
+              alt="profile picture"
+              class="profile-pic"
+          />
+          </div>
+          <p class="note-profile-username username-el note-title"> ${name}</p>
+
+           <p class="note-date gray-font"> • ${formatTimeElapsed(
+             timestamp + '000'
+           )}</p>
+
+           <span class="material-symbols-outlined note-more-menu">
+more_horiz
+</span>
+      </div>
+      <div class="note-body">
+      ${content}
+      </div>
+      <hr>
+      <div class="note-card-footer">
+          <div class="note-comments footer-icon">
+          <span class="material-symbols-outlined"> chat_bubble </span>
+          </div>
+
+          <div class="note-likes footer-icon">
+          <span class="material-symbols-outlined"> favorite </span>
+          </div>
+
+          <div class="note-share footer-icon">
+          <span class="material-symbols-outlined"> share </span>
+          </div>
+
+          <div class="note-bolt footer-icon">
+          <span class="material-symbols-outlined">
+          bolt
+          </span>
+          </div>
+
+          <div class="note-share footer-icon">
+      </div>
+      `;
+  document.querySelector('.notes-container').prepend(noteCard);
 }

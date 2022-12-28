@@ -7380,55 +7380,52 @@ zoo`.split("\n");
       return new Date(timestamp).toLocaleDateString();
     }
   }
-
-  // src/js/index.js
-  async function connectToRelay() {
-    const relay = relayInit("wss://nostr-pub.wellorder.net");
-    await relay.connect();
-    relay.on("connect", () => {
-      console.log(`connected to ${relay.url}`);
-    });
-    relay.on("error", () => {
-      console.log(`failed to connect to ${relay.url}`);
-    });
-    return relay;
-  }
-  async function getEvents(relay) {
-    return new Promise((resolve) => {
-      const sub = relay.sub([{ kinds: [0, 1], limit: 15 }]);
-      sub.on("event", (event) => {
-        if (event.kind === 0) {
-          console.log("this is a type 0 event", event);
-        } else if (event.kind === 1) {
-          console.log("this is a type 1 event", event);
-          createNoteCard2(event);
-        }
-        resolve(event);
+  function extractNameAndPicture(obj) {
+    if (obj.kind === 0) {
+      const { name, pubkey, picture } = JSON.parse(obj.content);
+      caches.open("my-cache").then((cache) => {
+        cache.put(pubkey, { name, picture });
       });
-      sub.on("eose", () => {
-        sub.unsub();
-      });
-    });
+      console.log("name and picture extracted", name, picture);
+    }
   }
-  async function createNoteCard2(event) {
+  function createNoteCardFromCache(obj) {
+    if (obj.kind === 1) {
+      const pubKey = obj.pubKey;
+      const content = obj.content;
+      const timestamp = obj.created_at;
+      const name = "Anon";
+      const picture = "https://i.pravatar.cc/150";
+      caches.open("my-cache").then((cache) => {
+        cache.match(pubKey).then((response) => {
+          if (response) {
+            const { name: name2, picture: picture2 } = response;
+            createNoteCard(name2, picture2, content, timestamp);
+            console.log("yes response");
+          } else if (!response) {
+            createNoteCard(name, picture, content, timestamp);
+            console.log("no response");
+          }
+        });
+      });
+    }
+  }
+  async function createNoteCard(name, picture, content, timestamp) {
     const noteCard = document.createElement("div");
     noteCard.classList.add("note-card");
     noteCard.innerHTML = `
       <div class="note-card-header">
           <div class="note-profile-picture">
           <img
-              src="https://i.pravatar.cc/150"
+              src="${picture}"
               alt="profile picture"
               class="profile-pic"
           />
           </div>
-          <p class="note-profile-username username-el note-title"> ${event.pubkey.substr(
-      0,
-      7
-    )}</p>
+          <p class="note-profile-username username-el note-title"> ${name}</p>
 
            <p class="note-date gray-font"> \u2022 ${formatTimeElapsed(
-      event.created_at + "000"
+      timestamp + "000"
     )}</p>
 
            <span class="material-symbols-outlined note-more-menu">
@@ -7436,7 +7433,7 @@ more_horiz
 </span>
       </div>
       <div class="note-body">
-      ${event.content}
+      ${content}
       </div>
       <hr>
       <div class="note-card-footer">
@@ -7461,12 +7458,44 @@ more_horiz
           <div class="note-share footer-icon">
       </div>
       `;
-    document.querySelector(".notes-feed").appendChild(noteCard);
+    document.querySelector(".notes-container").prepend(noteCard);
+  }
+
+  // src/js/index.js
+  async function connectToRelay() {
+    const relay = relayInit("wss://nostr-pub.wellorder.net");
+    await relay.connect();
+    relay.on("connect", () => {
+      console.log(`connected to ${relay.url}`);
+    });
+    relay.on("error", () => {
+      console.log(`failed to connect to ${relay.url}`);
+    });
+    return relay;
+  }
+  async function getEvents(relay) {
+    return new Promise((resolve) => {
+      const sub = relay.sub([{ kinds: [0, 1], limit: 100 }]);
+      sub.on("event", (event) => {
+        if (event.kind === 0) {
+          console.log("this is a type 0 event", event);
+          extractNameAndPicture(event);
+        } else if (event.kind === 1) {
+          console.log("this is a type 1 event", event);
+          createNoteCardFromCache(event);
+        }
+        resolve(event);
+      });
+      sub.on("eose", () => {
+        sub.unsub();
+      });
+    });
   }
   async function main() {
     const relay = await connectToRelay();
     const event = await getEvents(relay);
-    await createNoteCard2(event);
+    await extractNameAndPicture(event);
+    await createNoteCardFromCache(event);
   }
   main();
 })();

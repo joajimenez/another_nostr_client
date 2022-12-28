@@ -12,16 +12,6 @@ import { createNoteCardFromCache } from './utils';
 
 import { formatTimeElapsed } from './utils';
 
-// const pool = relayPool();
-// pool.addRelay('wss://relay.nostr.info', { read: true, write: true });
-// pool.addRelay('wss://nostr.openchain.fr', { read: true, write: true });
-// // pool.addRelay('wss://relay.damus.io', {read: true, write: true});
-// pool.addRelay('wss://nostr-relay.wlvs.space', { read: true, write: true });
-// pool.addRelay('wss://relay.nostr.ch', { read: true, write: true });
-// pool.addRelay('wss://nostr.sandwich.farm', { read: true, write: true });
-
-// console.log(pool);
-
 // let's connect to a relay
 async function connectToRelay() {
   const relay = relayInit('wss://nostr-pub.wellorder.net');
@@ -41,7 +31,7 @@ async function connectToRelay() {
 async function getEvents(relay) {
   return new Promise((resolve) => {
     // subscribe to events
-    const sub = relay.sub([{ kinds: [0, 1], limit: 15 }]);
+    const sub = relay.sub([{ kinds: [0, 1], limit: 100 }]);
 
     // sub.on('event', (event) => {
     //   console.log('we got the event we wanted:', event);
@@ -57,9 +47,11 @@ async function getEvents(relay) {
     sub.on('event', (event) => {
       if (event.kind === 0) {
         console.log('this is a type 0 event', event);
+        extractNameAndPicture(event);
       } else if (event.kind === 1) {
         console.log('this is a type 1 event', event);
-        createNoteCard(event);
+        // createNoteCard(event);
+        createNoteCardFromCache(event);
       }
       resolve(event);
     });
@@ -104,68 +96,14 @@ async function getEvents(relay) {
 // //   // await relay.close();
 // // }
 
-// let create the note cards
-async function createNoteCard(event) {
-  const noteCard = document.createElement('div');
-  noteCard.classList.add('note-card');
-  noteCard.innerHTML = `
-      <div class="note-card-header">
-          <div class="note-profile-picture">
-          <img
-              src="https://i.pravatar.cc/150"
-              alt="profile picture"
-              class="profile-pic"
-          />
-          </div>
-          <p class="note-profile-username username-el note-title"> ${event.pubkey.substr(
-            0,
-            7
-          )}</p>
-
-           <p class="note-date gray-font"> • ${formatTimeElapsed(
-             event.created_at + '000'
-           )}</p>
-
-           <span class="material-symbols-outlined note-more-menu">
-more_horiz
-</span>
-      </div>
-      <div class="note-body">
-      ${event.content}
-      </div>
-      <hr>
-      <div class="note-card-footer">
-          <div class="note-comments footer-icon">
-          <span class="material-symbols-outlined"> chat_bubble </span>
-          </div>
-
-          <div class="note-likes footer-icon">
-          <span class="material-symbols-outlined"> favorite </span>
-          </div>
-
-          <div class="note-share footer-icon">
-          <span class="material-symbols-outlined"> share </span>
-          </div>
-
-          <div class="note-bolt footer-icon">
-          <span class="material-symbols-outlined">
-          bolt
-          </span>
-          </div>
-
-          <div class="note-share footer-icon">
-      </div>
-      `;
-  document.querySelector('.notes-feed').appendChild(noteCard);
-
-  //console.log('note card created');
-}
-
 async function main() {
   const relay = await connectToRelay();
   const event = await getEvents(relay);
-  await createNoteCard(event);
-  // await publishEvent(relay);
+  await extractNameAndPicture(event);
+  await createNoteCardFromCache(event);
+
+  // await createNoteCard(event);
+  // // await publishEvent(relay);
 }
 
 main();
