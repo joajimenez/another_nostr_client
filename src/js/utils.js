@@ -51,3 +51,20 @@ export function createNoteCardFromCache(obj) {
     });
   }
 }
+
+// check for different types of events
+export function getDifferentKindOfEvents(relay) {
+  sub.on('event', (event) => {
+    if (event.kind === 0) {
+      console.log('this is a type 0 event', event);
+    } else if (event.kind === 1) {
+      console.log('this is a type 1 event', event);
+      createNoteCard(event);
+    }
+    resolve(event);
+  });
+
+  sub.on('eose', () => {
+    sub.unsub();
+  });
+}
