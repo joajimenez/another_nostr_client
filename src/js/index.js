@@ -9,6 +9,7 @@ import {
 
 import { extractNameAndPicture } from './utils';
 import { createNoteCardFromCache } from './utils';
+import { extractNameAndPic } from './utils';
 
 import { formatTimeElapsed } from './utils';
 
@@ -69,6 +70,30 @@ async function getEvents(relay) {
     });
   });
 }
+
+// let's check if event.kind 0 and kind.kind 1 share the same pubkey and if so, add the event.kind 0 content.name as note-title to a note card
+
+function createNoteCard(event) {
+  // get the name and picture from the event.kind 0
+  extractNameAndPicture(event);
+
+  // create a note card from the event.kind 1
+  createNoteCardFromCache(event);
+}
+
+// let's add the event.content and event.picture of event.kind 0 to a note card if the ID is the same as the one we are looking for
+
+
+
+// {
+//   "id": "2ceea66c4ac0145f9baccc96a46e75dfa50025852399f64383ecb86260642547",
+//   "pubkey": "9020e3c6ad0cccf36c63fd1c1382bbd4e67af478f6d27297ac1b746d9f6afa11",
+//   "created_at": 1672255629,
+//   "kind": 0,
+//   "tags": [],
+//   "content": "{\"name\":\"chris\",\"about\":\"test\"}",
+//   "sig": "db47c1cc5462ffb8ee1fb5723694ea7b416aa8ac93172148bb8a59d167f96f15f02f1e9528ba7405d91d43d0e205eb8f701e29d83115bb6909fc1199c58cab29"
+// }
 
 // let's add the event.content and event.picture of event.kind 0 to a note card if the ID is the same as the one we are looking for
 

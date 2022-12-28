@@ -21,6 +21,16 @@ export function extractNameAndPicture(obj) {
   }
 }
 
+export function extractNameAndPic(obj) {
+  if (obj.kind === 0) {
+    const { name, pubKey, picture } = JSON.parse(obj.content);
+    caches.open('my-cache').then((cache) => {
+      cache.put(pubKey, { name, picture });
+    });
+    return { name, picture };
+  }
+}
+
 export function createNoteCardFromCache(obj) {
   if (obj.kind === 1) {
     const pubKey = obj.pubKey;
