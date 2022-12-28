@@ -42,48 +42,46 @@ async function connectToRelay() {
 async function getEvents(relay) {
   return new Promise((resolve) => {
     // subscribe to events
-    const sub = relay.sub([{ kinds: [0, 1], limit: 15 }]);
-
-    // sub.on('event', (event) => {
-    //   console.log('we got the event we wanted:', event);
-    //   createNoteCard(event);
-    //   resolve(event);
-    // });
-    // sub.on('eose', () => {
-    //   sub.unsub();
-    // });
-
-    // check for different types of events
+    const sub = relay.sub([{ kinds: [1], limit: 100 }]);
 
     sub.on('event', (event) => {
-      if (event.kind === 0) {
-        console.log('this is a type 0 event', event);
-      } else if (event.kind === 1) {
-        console.log('this is a type 1 event', event);
-        createNoteCard(event);
-      }
+      console.log('we got the event we wanted:', event);
+      createNoteCard(event);
       resolve(event);
     });
-
     sub.on('eose', () => {
       sub.unsub();
     });
+
+    // check for different types of events
+
+    // sub.on('event', (event) => {
+    //   if (event.kind === 0) {
+    //     console.log('this is a type 0 event', event);
+    //   } else if (event.kind === 1) {
+    //     console.log('this is a type 1 event', event);
+    //     createNoteCard(event);
+    //   }
+    //   resolve(event);
+    // });
+
+    // sub.on('eose', () => {
+    //   sub.unsub();
+    // });
   });
 }
 
 // let's check if event.kind 0 and kind.kind 1 share the same pubkey and if so, add the event.kind 0 content.name as note-title to a note card
 
-function createNoteCard(event) {
-  // get the name and picture from the event.kind 0
-  extractNameAndPicture(event);
+// function createNoteCard(event) {
+//   // get the name and picture from the event.kind 0
+//   extractNameAndPicture(event);
 
-  // create a note card from the event.kind 1
-  createNoteCardFromCache(event);
-}
+//   // create a note card from the event.kind 1
+//   createNoteCardFromCache(event);
+// }
 
 // let's add the event.content and event.picture of event.kind 0 to a note card if the ID is the same as the one we are looking for
-
-
 
 // {
 //   "id": "2ceea66c4ac0145f9baccc96a46e75dfa50025852399f64383ecb86260642547",

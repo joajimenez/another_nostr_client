@@ -7395,14 +7395,10 @@ zoo`.split("\n");
   }
   async function getEvents(relay) {
     return new Promise((resolve) => {
-      const sub = relay.sub([{ kinds: [0, 1], limit: 15 }]);
+      const sub = relay.sub([{ kinds: [1], limit: 100 }]);
       sub.on("event", (event) => {
-        if (event.kind === 0) {
-          console.log("this is a type 0 event", event);
-        } else if (event.kind === 1) {
-          console.log("this is a type 1 event", event);
-          createNoteCard2(event);
-        }
+        console.log("we got the event we wanted:", event);
+        createNoteCard2(event);
         resolve(event);
       });
       sub.on("eose", () => {
