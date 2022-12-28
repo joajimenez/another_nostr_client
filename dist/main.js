@@ -7395,10 +7395,14 @@ zoo`.split("\n");
   }
   async function getEvents(relay) {
     return new Promise((resolve) => {
-      const sub = relay.sub([{ kinds: [1], limit: 100 }]);
+      const sub = relay.sub([{ kinds: [0, 1], limit: 15 }]);
       sub.on("event", (event) => {
-        console.log("we got the event we wanted:", event);
-        createNoteCard(event);
+        if (event.kind === 0) {
+          console.log("this is a type 0 event", event);
+        } else if (event.kind === 1) {
+          console.log("this is a type 1 event", event);
+          createNoteCard2(event);
+        }
         resolve(event);
       });
       sub.on("eose", () => {
@@ -7406,7 +7410,7 @@ zoo`.split("\n");
       });
     });
   }
-  async function createNoteCard(event) {
+  async function createNoteCard2(event) {
     const noteCard = document.createElement("div");
     noteCard.classList.add("note-card");
     noteCard.innerHTML = `
@@ -7437,11 +7441,11 @@ more_horiz
       <hr>
       <div class="note-card-footer">
           <div class="note-comments footer-icon">
-          <span class="material-symbols-outlined"> comment </span>
-          </div> 
+          <span class="material-symbols-outlined"> chat_bubble </span>
+          </div>
 
           <div class="note-likes footer-icon">
-          <span class="material-symbols-outlined"> favorite </span> 
+          <span class="material-symbols-outlined"> favorite </span>
           </div>
 
           <div class="note-share footer-icon">
@@ -7458,11 +7462,11 @@ more_horiz
       </div>
       `;
     document.querySelector(".notes-feed").appendChild(noteCard);
-    console.log("note card created");
   }
   async function main() {
     const relay = await connectToRelay();
     const event = await getEvents(relay);
+    await createNoteCard2(event);
   }
   main();
 })();

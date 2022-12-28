@@ -102,13 +102,6 @@ body {
   color: rgb(88, 88, 88);
 }
 
-hr {
-  border: 1px solid rgba(185, 185, 185, 0.397);
-  margin-top: 1rem;
-  margin-left: 1.5rem;
-  width: 100%;
-}
-
 nav {
   display: flex;
   align-items: flex-start;
@@ -183,12 +176,16 @@ nav {
   background-color: inherit;
 }
 
-.side-bar {
-  display: none;
+.post-note-icon-el {
+  font-size: 1.5rem;
+  
 }
 
-.social-graph-container {
-  display: none;
+hr {
+  border: 1px solid rgba(185, 185, 185, 0.397);
+  margin-top: 1rem;
+  /* margin-left: 1.5rem; */
+  width: auto;
 }
 
 @media screen and (min-width: 768px) {
@@ -213,7 +210,7 @@ nav {
     align-items: flex-start;
     height: 100%;
     display: flex;
-    max-width: 15%;
+    max-width: max-content;
     background-color: white;
     position: fixed;
     left: 0;

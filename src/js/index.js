@@ -4,9 +4,23 @@ import {
   getPublicKey,
   getEventHash,
   signEvent,
+  // relayPool,
 } from 'nostr-tools';
 
+import { extractNameAndPicture } from './utils';
+import { createNoteCardFromCache } from './utils';
+
 import { formatTimeElapsed } from './utils';
+
+// const pool = relayPool();
+// pool.addRelay('wss://relay.nostr.info', { read: true, write: true });
+// pool.addRelay('wss://nostr.openchain.fr', { read: true, write: true });
+// // pool.addRelay('wss://relay.damus.io', {read: true, write: true});
+// pool.addRelay('wss://nostr-relay.wlvs.space', { read: true, write: true });
+// pool.addRelay('wss://relay.nostr.ch', { read: true, write: true });
+// pool.addRelay('wss://nostr.sandwich.farm', { read: true, write: true });
+
+// console.log(pool);
 
 // let's connect to a relay
 async function connectToRelay() {
@@ -27,50 +41,68 @@ async function connectToRelay() {
 async function getEvents(relay) {
   return new Promise((resolve) => {
     // subscribe to events
-    const sub = relay.sub([{ kinds: [1], limit: 100 }]);
+    const sub = relay.sub([{ kinds: [0, 1], limit: 15 }]);
+
+    // sub.on('event', (event) => {
+    //   console.log('we got the event we wanted:', event);
+    //   createNoteCard(event);
+    //   resolve(event);
+    // });
+    // sub.on('eose', () => {
+    //   sub.unsub();
+    // });
+
+    // check for different types of events
 
     sub.on('event', (event) => {
-      console.log('we got the event we wanted:', event);
-      createNoteCard(event);
+      if (event.kind === 0) {
+        console.log('this is a type 0 event', event);
+      } else if (event.kind === 1) {
+        console.log('this is a type 1 event', event);
+        createNoteCard(event);
+      }
       resolve(event);
     });
+
     sub.on('eose', () => {
       sub.unsub();
     });
   });
 }
 
-// lets publish an event
-async function publishEvent(relay) {
-  // generate a private key and get the public key
-  const sk = generatePrivateKey();
-  const pk = getPublicKey(sk);
+// let's add the event.content and event.picture of event.kind 0 to a note card if the ID is the same as the one we are looking for
 
-  // create an event
-  const event = {
-    kind: 1,
-    pubkey: pk,
-    created_at: Math.floor(Date.now() / 1000),
-    tags: [],
-    content: 'testing from barahona',
-  };
-  event.id = getEventHash(event);
-  event.sig = signEvent(event, sk);
+// // // lets publish an event
+// // async function publishEvent(relay) {
+// //   // generate a private key and get the public key
+// //   const sk = generatePrivateKey();
+// //   const pk = getPublicKey(sk);
 
-  // publish the event
-  const pub = relay.publish(event);
-  pub.on('ok', () => {
-    console.log(`{relay.url} has accepted our event`);
-  });
-  pub.on('seen', () => {
-    console.log(`we saw the event on {relay.url}`);
-  });
-  pub.on('failed', (reason) => {
-    console.log(`failed to publish to {relay.url}: ${reason}`);
-  });
+// //   // create an event
+// //   const event = {
+// //     kind: 1,
+// //     pubkey: pk,
+// //     created_at: Math.floor(Date.now() / 1000),
+// //     tags: [],
+// //     content: 'testing from barahona',
+// //   };
+// //   event.id = getEventHash(event);
+// //   event.sig = signEvent(event, sk);
 
-  // await relay.close();
-}
+// //   // publish the event
+// //   const pub = relay.publish(event);
+// //   pub.on('ok', () => {
+// //     console.log(`{relay.url} has accepted our event`);
+// //   });
+// //   pub.on('seen', () => {
+// //     console.log(`we saw the event on {relay.url}`);
+// //   });
+// //   pub.on('failed', (reason) => {
+// //     console.log(`failed to publish to {relay.url}: ${reason}`);
+// //   });
+
+// //   // await relay.close();
+// // }
 
 // let create the note cards
 async function createNoteCard(event) {
@@ -104,11 +136,11 @@ more_horiz
       <hr>
       <div class="note-card-footer">
           <div class="note-comments footer-icon">
-          <span class="material-symbols-outlined"> comment </span>
-          </div> 
+          <span class="material-symbols-outlined"> chat_bubble </span>
+          </div>
 
           <div class="note-likes footer-icon">
-          <span class="material-symbols-outlined"> favorite </span> 
+          <span class="material-symbols-outlined"> favorite </span>
           </div>
 
           <div class="note-share footer-icon">
@@ -126,13 +158,13 @@ more_horiz
       `;
   document.querySelector('.notes-feed').appendChild(noteCard);
 
-  console.log('note card created');
+  //console.log('note card created');
 }
 
 async function main() {
   const relay = await connectToRelay();
   const event = await getEvents(relay);
-  // await createNoteCard(event);
+  await createNoteCard(event);
   // await publishEvent(relay);
 }
 
