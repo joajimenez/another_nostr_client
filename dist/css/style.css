@@ -342,17 +342,7 @@ hr {
     box-shadow: rgba(0, 0, 0, 0.5);
   }
 
-  nav .nav-text-icons {
+  .nav-text-icons {
     color: #fff;
-  }
-
-  .fixedButton {
-    background-color: #6750a4;
-    box-shadow: rgba(0, 0, 0, 0.5);
-    border-radius: 1rem;
-  }
-
-  .fixedButton:hover {
-    background-color: #4d3a7a;
   }
 }
