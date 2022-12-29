@@ -21,13 +21,6 @@ export function extractNameAndPicture(obj) {
   }
 }
 
-// function extractNameAndPicSetToLocalStorage(obj) {
-//   if (obj.kind === 0) {
-//     const { name, pubkey, picture } = JSON.parse(obj.content);
-//     localStorage.setItem(pubkey, JSON.stringify({ name, picture }));
-//   }
-// }
-
 // Extract profile data to the local storage
 
 export function extractAndStoreData(obj) {
@@ -48,7 +41,12 @@ export function createNoteCard(event) {
   const storedData = localStorage.getItem(event.pubkey);
 
   if (storedData) {
-    const { name, picture } = JSON.parse(storedData);
+    let { name, picture } = JSON.parse(storedData);
+
+    if (picture === undefined || picture === null) {
+      picture = `https://avatars.dicebear.com/api/big-smile/${event.pubkey}.svg`;
+    }
+
     // console.log('name', name);
     const noteCard = document.createElement('div');
     noteCard.classList.add('note-card');
@@ -100,7 +98,7 @@ export function createNoteCard(event) {
          `;
     document.querySelector('.notes-feed').appendChild(noteCard);
 
-    console.log('SUCCESS! created with stored data');
+    // console.log('SUCCESS! created with stored data');
     // console.log(storedData);
   } else {
     const noteCard = document.createElement('div');
@@ -173,4 +171,12 @@ export function getDifferentKindOfEvents(relay) {
   sub.on('eose', () => {
     sub.unsub();
   });
+}
+
+// User profile page
+
+export function getUserProfilePage() {
+  const storedData = localStorage.getItem(pubkey);
+
+  const { name, website, nip05, picture } = JSON.parse(storedData);
 }

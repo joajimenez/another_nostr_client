@@ -19,6 +19,7 @@ body {
   font-family: 'Roboto Slab', serif;
   font-weight: 700;
   font-size: larger;
+  color: #6750a4;
 }
 
 .username-el {
@@ -39,6 +40,24 @@ body {
   justify-content: center;
   width: 100%;
   padding: 0.2rem 0.5rem;
+}
+
+.top-navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  background-color: #dfdfdf;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  transition: top 0.3s; /* Transition effect when sliding down (and up) */
+}
+
+.top-navbar a:hover {
+  background-color: #ddd;
+  color: black;
 }
 
 .notes-feed {

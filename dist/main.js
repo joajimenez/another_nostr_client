@@ -3894,7 +3894,7 @@ zoo`.split("\n");
       const points = [];
       let p = this;
       let base = p;
-      for (let window = 0; window < windows; window++) {
+      for (let window2 = 0; window2 < windows; window2++) {
         base = p;
         points.push(base);
         for (let i = 1; i < 2 ** (W - 1); i++) {
@@ -3927,8 +3927,8 @@ zoo`.split("\n");
       const mask = BigInt(2 ** W - 1);
       const maxNumber = 2 ** W;
       const shiftBy = BigInt(W);
-      for (let window = 0; window < windows; window++) {
-        const offset = window * windowSize;
+      for (let window2 = 0; window2 < windows; window2++) {
+        const offset = window2 * windowSize;
         let wbits = Number(n & mask);
         n >>= shiftBy;
         if (wbits > windowSize) {
@@ -3937,7 +3937,7 @@ zoo`.split("\n");
         }
         if (wbits === 0) {
           let pr = precomputes[offset];
-          if (window % 2)
+          if (window2 % 2)
             pr = pr.negate();
           f2 = f2.add(pr);
         } else {
@@ -7102,8 +7102,8 @@ zoo`.split("\n");
     decrypt: () => decrypt,
     encrypt: () => encrypt
   });
-  async function encrypt(privkey, pubkey, text) {
-    const key = getSharedSecret(privkey, "02" + pubkey);
+  async function encrypt(privkey, pubkey2, text) {
+    const key = getSharedSecret(privkey, "02" + pubkey2);
     const normalizedKey = getNormalizedX(key);
     let iv = Uint8Array.from(randomBytes(16));
     let plaintext = utf8Encoder.encode(text);
@@ -7123,9 +7123,9 @@ zoo`.split("\n");
     let ivb64 = encode(iv.buffer);
     return `${ctb64}?iv=${ivb64}`;
   }
-  async function decrypt(privkey, pubkey, data) {
+  async function decrypt(privkey, pubkey2, data) {
     let [ctb64, ivb64] = data.split("?iv=");
-    let key = getSharedSecret(privkey, "02" + pubkey);
+    let key = getSharedSecret(privkey, "02" + pubkey2);
     let normalizedKey = getNormalizedX(key);
     let cryptoKey = await crypto.subtle.importKey(
       "raw",
@@ -7180,10 +7180,10 @@ zoo`.split("\n");
     let res = await (await _fetch(`https://${domain}/.well-known/nostr.json?name=${name}`)).json();
     if (!res?.names?.[name])
       return null;
-    let pubkey = res.names[name];
-    let relays = res.relays?.[pubkey] || [];
+    let pubkey2 = res.names[name];
+    let relays = res.relays?.[pubkey2] || [];
     return {
-      pubkey,
+      pubkey: pubkey2,
       relays
     };
   }
@@ -7342,7 +7342,7 @@ zoo`.split("\n");
     let tag = event.tags.find((tag2) => tag2[0] === "delegation" && tag2.length >= 4);
     if (!tag)
       return null;
-    let pubkey = tag[1];
+    let pubkey2 = tag[1];
     let cond = tag[2];
     let sig = tag[3];
     let conditions = cond.split("&");
@@ -7360,9 +7360,9 @@ zoo`.split("\n");
     let sighash = sha256(
       utf8Encoder.encode(`nostr:delegation:${event.pubkey}:${cond}`)
     );
-    if (!schnorr.verifySync(sig, sighash, pubkey))
+    if (!schnorr.verifySync(sig, sighash, pubkey2))
       return null;
-    return pubkey;
+    return pubkey2;
   }
   utils.hmacSha256Sync = (key, ...msgs) => hmac2(sha256, key, utils.concatBytes(...msgs));
   utils.sha256Sync = (...msgs) => sha256(utils.concatBytes(...msgs));
@@ -7391,7 +7391,10 @@ zoo`.split("\n");
   function createNoteCard(event) {
     const storedData = localStorage.getItem(event.pubkey);
     if (storedData) {
-      const { name, picture } = JSON.parse(storedData);
+      let { name, picture } = JSON.parse(storedData);
+      if (picture === void 0 || picture === null) {
+        picture = `https://avatars.dicebear.com/api/big-smile/${event.pubkey}.svg`;
+      }
       const noteCard = document.createElement("div");
       noteCard.classList.add("note-card");
       noteCard.innerHTML = `
@@ -7441,7 +7444,6 @@ zoo`.split("\n");
          </div>
          `;
       document.querySelector(".notes-feed").appendChild(noteCard);
-      console.log("SUCCESS! created with stored data");
     } else {
       const noteCard = document.createElement("div");
       const shortenedPubkey = event.pubkey.substring(0, 7);
@@ -7498,7 +7500,7 @@ zoo`.split("\n");
 
   // src/js/index.js
   async function connectToRelay() {
-    const relay = relayInit("wss://brb.io");
+    const relay = relayInit("wss://nostr-pub.wellorder.net");
     await relay.connect();
     relay.on("connect", () => {
       console.log(`connected to ${relay.url}`);
@@ -7513,7 +7515,6 @@ zoo`.split("\n");
       const sub2 = relay.sub([{ kinds: [0, 1], limit: 100 }]);
       sub2.on("event", (event) => {
         if (event.kind === 0) {
-          console.log("Set new event kind 0 to local storage:", event);
           extractAndStoreData(event);
         } else if (event.kind === 1) {
           createNoteCard(event);
@@ -7529,6 +7530,19 @@ zoo`.split("\n");
     const relay = await connectToRelay();
     const event = await getEvents(relay);
     await createNoteCard(event);
+    hideNavbar();
+  }
+  function hideNavbar() {
+    let prevScrollpos = window.pageYOffset;
+    window.onscroll = function() {
+      let currentScrollPos = window.pageYOffset;
+      if (prevScrollpos > currentScrollPos) {
+        document.querySelector(".top-navbar").style.top = "0";
+      } else {
+        document.querySelector(".top-navbar").style.top = "-50px";
+      }
+      prevScrollpos = currentScrollPos;
+    };
   }
   main();
 })();
