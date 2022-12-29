@@ -44,9 +44,10 @@ body {
 
 .top-navbar {
   display: flex;
+  align-items: center;
   justify-content: space-between;
   padding: 0.5rem 1rem;
-  background-color: #dfdfdf;
+  background-color: white;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   position: fixed;
@@ -56,7 +57,7 @@ body {
 }
 
 .top-navbar a:hover {
-  background-color: #ddd;
+  background-color: rgb(134, 132, 132);
   color: black;
 }
 
@@ -65,6 +66,7 @@ body {
   flex-direction: column;
   /* align-items: center; */
   width: 100%;
+  margin-top: 4rem;
 }
 
 .note-card {
@@ -85,7 +87,7 @@ body {
   /* padding-bottom: 0.6rem; */
 }
 
-.note-card .note-card-header .profile-pic {
+.profile-pic {
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 50%;
@@ -93,6 +95,12 @@ body {
 
 .note-card .note-card-header .note-title {
   margin-left: 0.5rem;
+}
+
+.font-logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: rgb(131, 58, 180);
 }
 
 .note-card .note-card-header .note-date {
@@ -128,7 +136,7 @@ nav {
   align-items: flex-start;
   justify-content: space-between;
   padding: 0.5rem 1rem;
-  background-color: #dfdfdf;
+  background-color: white;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   position: fixed;
@@ -140,14 +148,7 @@ nav {
   font-size: 1.5rem;
   font-weight: 700;
   display: none;
-  background: rgb(131, 58, 180);
-  background: linear-gradient(
-    90deg,
-    rgba(131, 58, 180, 1) 0%,
-    rgba(253, 29, 29, 1) 73%,
-    rgba(252, 176, 69, 1) 100%
-  );
-  background-clip: text;
+  color: rgb(131, 58, 180);
 }
 
 .nav-text-desc {
@@ -223,6 +224,10 @@ hr {
     min-height: 100%; /* Set the height of the container to match the viewport */
     flex-direction: row;
     width: 100%;
+  }
+
+  .top-navbar {
+    display: none;
   }
 
   nav {
