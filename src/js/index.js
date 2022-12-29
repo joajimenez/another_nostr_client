@@ -7,10 +7,6 @@ import {
   // relayPool,
 } from 'nostr-tools';
 
-import { extractNameAndPicture } from './utils';
-import { createNoteCardFromCache } from './utils';
-import { extractNameAndPic } from './utils';
-
 import { formatTimeElapsed } from './utils';
 
 // let's connect to a relay

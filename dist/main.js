@@ -4899,11 +4899,11 @@ zoo`.split("\n");
     try {
       if (nodeRequire) {
         const { setImmediate } = nodeRequire("timers");
-        return () => new Promise((resolve) => setImmediate(resolve));
+        return () => new Promise((resolve2) => setImmediate(resolve2));
       }
     } catch (e) {
     }
-    return () => new Promise((resolve) => setTimeout(resolve, 0));
+    return () => new Promise((resolve2) => setTimeout(resolve2, 0));
   })();
   function utf8ToBytes(str) {
     if (typeof str !== "string") {
@@ -6907,11 +6907,11 @@ zoo`.split("\n");
     var subListeners = {};
     var pubListeners = {};
     async function connectRelay() {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve2, reject) => {
         ws = new WebSocket(url);
         ws.onopen = () => {
           listeners.connect.forEach((cb) => cb());
-          resolve();
+          resolve2();
         };
         ws.onerror = () => {
           listeners.error.forEach((cb) => cb());
@@ -6980,7 +6980,7 @@ zoo`.split("\n");
       await untilOpen;
       ws.send(msg);
     }
-    const sub = (filters, {
+    const sub2 = (filters, {
       skipVerification = false,
       id = Math.random().toString().slice(2)
     } = {}) => {
@@ -6992,7 +6992,7 @@ zoo`.split("\n");
       };
       trySend(["REQ", subid, ...filters]);
       return {
-        sub: (newFilters, newOpts = {}) => sub(newFilters || filters, {
+        sub: (newFilters, newOpts = {}) => sub2(newFilters || filters, {
           skipVerification: newOpts.skipVerification || skipVerification,
           id: subid
         }),
@@ -7018,7 +7018,7 @@ zoo`.split("\n");
     };
     return {
       url,
-      sub,
+      sub: sub2,
       on: (type, cb) => {
         listeners[type].push(cb);
         if (type === "connect" && ws?.readyState === 1) {
@@ -7045,7 +7045,7 @@ zoo`.split("\n");
         }).catch(() => {
         });
         const startMonitoring = () => {
-          let monitor = sub([{ ids: [id] }], {
+          let monitor = sub2([{ ids: [id] }], {
             id: `monitor-${id.slice(0, 5)}`
           });
           let willUnsub = setTimeout(() => {
@@ -7088,8 +7088,8 @@ zoo`.split("\n");
       connect,
       close() {
         ws.close();
-        return new Promise((resolve) => {
-          resolveClose = resolve;
+        return new Promise((resolve2) => {
+          resolveClose = resolve2;
         });
       },
       get status() {
@@ -7394,15 +7394,15 @@ zoo`.split("\n");
     return relay;
   }
   async function getEvents(relay) {
-    return new Promise((resolve) => {
-      const sub = relay.sub([{ kinds: [1], limit: 100 }]);
-      sub.on("event", (event) => {
+    return new Promise((resolve2) => {
+      const sub2 = relay.sub([{ kinds: [1], limit: 100 }]);
+      sub2.on("event", (event) => {
         console.log("we got the event we wanted:", event);
         createNoteCard2(event);
-        resolve(event);
+        resolve2(event);
       });
-      sub.on("eose", () => {
-        sub.unsub();
+      sub2.on("eose", () => {
+        sub2.unsub();
       });
     });
   }
