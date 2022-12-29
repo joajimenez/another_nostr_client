@@ -114,7 +114,6 @@ body {
 
 .note-card .note-body {
   margin-left: 3rem;
-  /* padding-bottom: 1rem; */
   word-wrap: break-word;
 }
 
@@ -172,25 +171,6 @@ nav {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-}
-
-.fixedButton {
-  position: fixed;
-  bottom: 4rem;
-  right: 1rem;
-  margin: 0;
-  border: none;
-}
-
-.roundedFixedBtn {
-  padding-top: 25%;
-  height: 60px;
-  width: 60px;
-  border-radius: 25%;
-  background-color: #6750a4;
-  color: white;
-  text-align: center;
-  cursor: pointer;
 }
 
 .material-symbols-outlined {
@@ -317,6 +297,11 @@ hr {
 @media (prefers-color-scheme: dark) {
   body {
     background-color: #141414;
+  }
+
+  .top-navbar {
+    background-color: #313131;
+    box-shadow: rgba(0, 0, 0, 0.5);
   }
 
   .slab-font {
