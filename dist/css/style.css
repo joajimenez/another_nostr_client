@@ -78,6 +78,7 @@ body {
 
 .note-card .note-card-header .note-date {
   margin-left: 0.5rem;
+  font-weight: 400;
 }
 
 .note-card .note-card-header .note-more-menu {

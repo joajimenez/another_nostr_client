@@ -9,10 +9,11 @@ import {
 
 import { formatTimeElapsed } from './utils';
 import { extractAndStoreData } from './utils';
+import { createNoteCard } from './utils';
 
 // let's connect to a relay
 async function connectToRelay() {
-  const relay = relayInit('wss://nostr-pub.wellorder.net');
+  const relay = relayInit('wss://brb.io');
   await relay.connect();
 
   relay.on('connect', () => {
@@ -33,17 +34,17 @@ async function getEvents(relay) {
 
     sub.on('event', (event) => {
       if (event.kind === 0) {
-        console.log('Set event kind 0 to local storage:', event);
+        console.log('Set new event kind 0 to local storage:', event);
         extractAndStoreData(event);
       } else if (event.kind === 1) {
-        // console.log('we got the events kind 1 we wanted:', event);
+        // console.log('we got and display a new event kind 1:', event);
         createNoteCard(event);
       }
       // resolve(event);
+      resolve(event);
     });
     sub.on('eose', () => {
       sub.unsub();
-      resolve(events);
     });
   });
 }
@@ -81,7 +82,7 @@ async function getEvents(relay) {
 // }
 
 // let create the note cards
-async function createNoteCard(event) {
+async function publishEvent(event) {
   const noteCard = document.createElement('div');
   noteCard.classList.add('note-card');
   noteCard.innerHTML = `

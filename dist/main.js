@@ -7388,10 +7388,115 @@ zoo`.split("\n");
       JSON.stringify({ name, website, nip05, picture })
     );
   }
+  function createNoteCard(event) {
+    const storedData = localStorage.getItem(event.pubkey);
+    if (storedData) {
+      const { name, picture } = JSON.parse(storedData);
+      const noteCard = document.createElement("div");
+      noteCard.classList.add("note-card");
+      noteCard.innerHTML = `
+          <div class="note-card-header">
+              <div class="note-profile-picture">
+              <img
+                  src="${picture}"
+                  alt="profile picture"
+                  class="profile-pic"
+              />
+              </div>
+              <p class="note-profile-username username-el note-title"> ${name}</
+              <p class="note-date gray-font"> \u2022 ${formatTimeElapsed(
+        event.created_at + "000"
+      )}</p>
+   
+              <span class="material-symbols-outlined note-more-menu">
+   more_horiz
+   </span>
+         </div>
+         <div class="note-body">
+         ${event.content}
+         </div>
+         <hr>
+         <div class="note-card-footer">
+             <div class="note-comments footer-icon">
+             <span class="material-symbols-outlined"> chat_bubble </span>
+             </div>
+   
+             <div class="note-likes footer-icon">
+             <span class="material-symbols-outlined"> favorite </span>
+             </div>
+   
+             <div class="note-share footer-icon">
+             <span class="material-symbols-outlined"> share </span>
+             </div>
+   
+             <div class="note-bolt footer-icon">
+             <span class="material-symbols-outlined">
+             bolt
+             </span>
+             </div>
+   
+             <div class="note-share footer-icon">
+         </div>
+         `;
+      document.querySelector(".notes-feed").appendChild(noteCard);
+      console.log("SUCCESS! created with stored data");
+    } else {
+      const noteCard = document.createElement("div");
+      const shortenedPubkey = event.pubkey.substring(0, 7);
+      noteCard.classList.add("note-card");
+      noteCard.innerHTML = `
+          <div class="note-card-header">
+              <div class="note-profile-picture">
+              <img
+                  src="https://avatars.dicebear.com/api/big-smile/${event.pubkey}.svg"
+                  alt="profile picture"
+                  class="profile-pic"
+              />
+              </div>
+
+              <p class="note-profile-username username-el note-title"> ${shortenedPubkey}</p>
+              
+              <p class="note-date gray-font"> \u2022 ${formatTimeElapsed(
+        event.created_at + "000"
+      )}</p>
+   
+              <span class="material-symbols-outlined note-more-menu">
+   more_horiz
+   </span>
+         </div>
+         <div class="note-body">
+         ${event.content}
+         </div>
+         <hr>
+         <div class="note-card-footer">
+             <div class="note-comments footer-icon">
+             <span class="material-symbols-outlined"> chat_bubble </span>
+             </div>
+   
+             <div class="note-likes footer-icon">
+             <span class="material-symbols-outlined"> favorite </span>
+             </div>
+   
+             <div class="note-share footer-icon">
+             <span class="material-symbols-outlined"> share </span>
+             </div>
+   
+             <div class="note-bolt footer-icon">
+             <span class="material-symbols-outlined">
+             bolt
+             </span>
+             </div>
+   
+             <div class="note-share footer-icon">
+         </div>
+         `;
+      document.querySelector(".notes-feed").appendChild(noteCard);
+    }
+  }
 
   // src/js/index.js
   async function connectToRelay() {
-    const relay = relayInit("wss://nostr-pub.wellorder.net");
+    const relay = relayInit("wss://brb.io");
     await relay.connect();
     relay.on("connect", () => {
       console.log(`connected to ${relay.url}`);
@@ -7406,75 +7511,22 @@ zoo`.split("\n");
       const sub2 = relay.sub([{ kinds: [0, 1], limit: 100 }]);
       sub2.on("event", (event) => {
         if (event.kind === 0) {
-          console.log("Set event kind 0 to local storage:", event);
+          console.log("Set new event kind 0 to local storage:", event);
           extractAndStoreData(event);
         } else if (event.kind === 1) {
-          createNoteCard2(event);
+          createNoteCard(event);
         }
+        resolve2(event);
       });
       sub2.on("eose", () => {
         sub2.unsub();
-        resolve2(events);
       });
     });
-  }
-  async function createNoteCard2(event) {
-    const noteCard = document.createElement("div");
-    noteCard.classList.add("note-card");
-    noteCard.innerHTML = `
-      <div class="note-card-header">
-          <div class="note-profile-picture">
-          <img
-              src="https://i.pravatar.cc/150"
-              alt="profile picture"
-              class="profile-pic"
-          />
-          </div>
-          <p class="note-profile-username username-el note-title"> ${event.pubkey.substr(
-      0,
-      7
-    )}</p>
-
-           <p class="note-date gray-font"> \u2022 ${formatTimeElapsed(
-      event.created_at + "000"
-    )}</p>
-
-           <span class="material-symbols-outlined note-more-menu">
-more_horiz
-</span>
-      </div>
-      <div class="note-body">
-      ${event.content}
-      </div>
-      <hr>
-      <div class="note-card-footer">
-          <div class="note-comments footer-icon">
-          <span class="material-symbols-outlined"> chat_bubble </span>
-          </div>
-
-          <div class="note-likes footer-icon">
-          <span class="material-symbols-outlined"> favorite </span>
-          </div>
-
-          <div class="note-share footer-icon">
-          <span class="material-symbols-outlined"> share </span>
-          </div>
-
-          <div class="note-bolt footer-icon">
-          <span class="material-symbols-outlined">
-          bolt
-          </span>
-          </div>
-
-          <div class="note-share footer-icon">
-      </div>
-      `;
-    document.querySelector(".notes-feed").appendChild(noteCard);
   }
   async function main() {
     const relay = await connectToRelay();
     const event = await getEvents(relay);
-    await createNoteCard2(event);
+    await createNoteCard(event);
   }
   main();
 })();
