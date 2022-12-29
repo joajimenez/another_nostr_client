@@ -7403,7 +7403,9 @@ zoo`.split("\n");
                   class="profile-pic"
               />
               </div>
-              <p class="note-profile-username username-el note-title"> ${name}</
+              <p class="note-profile-username username-el note-title"> ${name}</p>
+              
+              
               <p class="note-date gray-font"> \u2022 ${formatTimeElapsed(
         event.created_at + "000"
       )}</p>

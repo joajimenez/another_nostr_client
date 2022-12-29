@@ -61,7 +61,9 @@ export function createNoteCard(event) {
                   class="profile-pic"
               />
               </div>
-              <p class="note-profile-username username-el note-title"> ${name}</
+              <p class="note-profile-username username-el note-title"> ${name}</p>
+              
+              
               <p class="note-date gray-font"> • ${formatTimeElapsed(
                 event.created_at + '000'
               )}</p>
