@@ -21,14 +21,27 @@ export function extractNameAndPicture(obj) {
   }
 }
 
-export function extractNameAndPic(obj) {
-  if (obj.kind === 0) {
-    const { name, pubKey, picture } = JSON.parse(obj.content);
-    caches.open('my-cache').then((cache) => {
-      cache.put(pubKey, { name, picture });
-    });
-    return { name, picture };
-  }
+// function extractNameAndPicSetToLocalStorage(obj) {
+//   if (obj.kind === 0) {
+//     const { name, pubkey, picture } = JSON.parse(obj.content);
+//     localStorage.setItem(pubkey, JSON.stringify({ name, picture }));
+//   }
+// }
+
+// Extract profile data to the local storage
+
+export function extractAndStoreData(obj) {
+  // Parse the content field of the object
+  const data = JSON.parse(obj.content);
+
+  // Extract the name, website, nip05, and picture url from the parsed data
+  const { name, website, nip05, picture } = data;
+
+  // Store the extracted data under the pubkey in localStorage
+  localStorage.setItem(
+    obj.pubkey,
+    JSON.stringify({ name, website, nip05, picture })
+  );
 }
 
 export function createNoteCardFromCache(obj) {

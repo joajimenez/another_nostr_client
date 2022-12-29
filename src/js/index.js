@@ -8,6 +8,7 @@ import {
 } from 'nostr-tools';
 
 import { formatTimeElapsed } from './utils';
+import { extractAndStoreData } from './utils';
 
 // let's connect to a relay
 async function connectToRelay() {
@@ -28,15 +29,21 @@ async function connectToRelay() {
 async function getEvents(relay) {
   return new Promise((resolve) => {
     // subscribe to events
-    const sub = relay.sub([{ kinds: [1], limit: 100 }]);
+    const sub = relay.sub([{ kinds: [0, 1], limit: 100 }]);
 
     sub.on('event', (event) => {
-      console.log('we got the event we wanted:', event);
-      createNoteCard(event);
-      resolve(event);
+      if (event.kind === 0) {
+        console.log('Set event kind 0 to local storage:', event);
+        extractAndStoreData(event);
+      } else if (event.kind === 1) {
+        // console.log('we got the events kind 1 we wanted:', event);
+        createNoteCard(event);
+      }
+      // resolve(event);
     });
     sub.on('eose', () => {
       sub.unsub();
+      resolve(events);
     });
   });
 }

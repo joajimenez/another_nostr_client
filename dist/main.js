@@ -7380,6 +7380,14 @@ zoo`.split("\n");
       return new Date(timestamp).toLocaleDateString();
     }
   }
+  function extractAndStoreData(obj) {
+    const data = JSON.parse(obj.content);
+    const { name, website, nip05, picture } = data;
+    localStorage.setItem(
+      obj.pubkey,
+      JSON.stringify({ name, website, nip05, picture })
+    );
+  }
 
   // src/js/index.js
   async function connectToRelay() {
@@ -7395,14 +7403,18 @@ zoo`.split("\n");
   }
   async function getEvents(relay) {
     return new Promise((resolve2) => {
-      const sub2 = relay.sub([{ kinds: [1], limit: 100 }]);
+      const sub2 = relay.sub([{ kinds: [0, 1], limit: 100 }]);
       sub2.on("event", (event) => {
-        console.log("we got the event we wanted:", event);
-        createNoteCard2(event);
-        resolve2(event);
+        if (event.kind === 0) {
+          console.log("Set event kind 0 to local storage:", event);
+          extractAndStoreData(event);
+        } else if (event.kind === 1) {
+          createNoteCard2(event);
+        }
       });
       sub2.on("eose", () => {
         sub2.unsub();
+        resolve2(events);
       });
     });
   }
