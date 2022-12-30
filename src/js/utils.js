@@ -180,3 +180,21 @@ export function getUserProfilePage() {
 
   const { name, website, nip05, picture } = JSON.parse(storedData);
 }
+
+export function checkForImgUrlInString(string) {
+  const regex = /(https?:\/\/.*\.(?:png|jpg|jpeg|gif))/gi;
+  const found = string.match(regex);
+  if (found) {
+    return found[0];
+  }
+}
+
+export function showImgInNoteCard(string) {
+  const imgurl = checkForImgUrlInString(string);
+  if (imgurl) {
+    const img = document.createElement('img');
+    img.src = imgurl;
+    img.classList.add('note-img');
+    return img;
+  }
+}
