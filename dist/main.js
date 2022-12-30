@@ -7540,6 +7540,7 @@ zoo`.split("\n");
         if (event.kind === 0) {
           extractAndStoreData(event);
         } else if (event.kind === 1) {
+          console.log("we got and display a new event kind 1:", event);
           createNoteCard(event);
         }
         resolve2(event);
