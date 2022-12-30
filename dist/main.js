@@ -7369,7 +7369,7 @@ zoo`.split("\n");
 
   // src/js/utils.js
   function formatTimeElapsed(timestamp) {
-    const elapsed = Date.now() - timestamp;
+    const elapsed = Date.now() - parseInt(timestamp);
     if (elapsed < 6e4) {
       return `${Math.round(elapsed / 1e3)}s ago`;
     } else if (elapsed < 36e5) {
@@ -7397,7 +7397,7 @@ zoo`.split("\n");
       }
       const noteCard = document.createElement("div");
       noteCard.classList.add("note-card");
-      noteCard.innerHTML = `
+      noteCard.textContent = `
           <div class="note-card-header">
               <div class="note-profile-picture">
               <img

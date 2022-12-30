@@ -1,5 +1,5 @@
 export function formatTimeElapsed(timestamp) {
-  const elapsed = Date.now() - timestamp;
+  const elapsed = Date.now() - parseInt(timestamp);
 
   if (elapsed < 60000) {
     return `${Math.round(elapsed / 1000)}s ago`;
@@ -9,15 +9,6 @@ export function formatTimeElapsed(timestamp) {
     return `${Math.round(elapsed / 3600000)}h ago`;
   } else {
     return new Date(timestamp).toLocaleDateString();
-  }
-}
-
-export function extractNameAndPicture(obj) {
-  if (obj.kind === 0) {
-    const { name, pubKey, picture } = JSON.parse(obj.content);
-    caches.open('my-cache').then((cache) => {
-      cache.put(pubKey, { name, picture });
-    });
   }
 }
 
@@ -50,7 +41,7 @@ export function createNoteCard(event) {
     // console.log('name', name);
     const noteCard = document.createElement('div');
     noteCard.classList.add('note-card');
-    noteCard.innerHTML = `
+    noteCard.textContent = `
           <div class="note-card-header">
               <div class="note-profile-picture">
               <img
