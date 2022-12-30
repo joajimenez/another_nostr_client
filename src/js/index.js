@@ -36,7 +36,7 @@ async function getEvents(relay) {
         //    console.log('Set new event kind 0 to local storage:', event);
         extractAndStoreData(event);
       } else if (event.kind === 1) {
-        console.log('we got and display a new event kind 1:', event);
+        // console.log('we got and display a new event kind 1:', event);
         createNoteCard(event);
       }
       // resolve(event);
