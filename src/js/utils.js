@@ -122,7 +122,7 @@ export function createNoteCard(event) {
 
     document.querySelector('.notes-feed').appendChild(noteCard);
 
-    console.log('Note card created');
+    // console.log('Note card created');
   } else {
     const noteCard = document.createElement('div');
     noteCard.classList.add('note-card');
@@ -187,6 +187,23 @@ export function createNoteCard(event) {
     likesIcon.textContent = 'favorite';
     likes.appendChild(likesIcon);
     footer.appendChild(likes);
+
+    const share = document.createElement('div');
+    share.classList.add('note-share', 'footer-icon');
+    const shareIcon = document.createElement('span');
+
+    shareIcon.classList.add('material-symbols-outlined');
+    shareIcon.textContent = 'share';
+    share.appendChild(shareIcon);
+    footer.appendChild(share);
+
+    const bolt = document.createElement('div');
+    bolt.classList.add('note-bolt', 'footer-icon');
+    const boltIcon = document.createElement('span');
+    boltIcon.classList.add('material-symbols-outlined');
+    boltIcon.textContent = 'bolt';
+    bolt.appendChild(boltIcon);
+    footer.appendChild(bolt);
 
     noteCard.appendChild(footer);
 
