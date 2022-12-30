@@ -7397,103 +7397,125 @@ zoo`.split("\n");
       }
       const noteCard = document.createElement("div");
       noteCard.classList.add("note-card");
-      noteCard.textContent = `
-          <div class="note-card-header">
-              <div class="note-profile-picture">
-              <img
-                  src="${picture}"
-                  alt="profile picture"
-                  class="profile-pic"
-              />
-              </div>
-              <p class="note-profile-username username-el note-title"> ${name}</p>
-              
-              
-              <p class="note-date gray-font"> \u2022 ${formatTimeElapsed(
-        event.created_at + "000"
-      )}</p>
-   
-              <span class="material-symbols-outlined note-more-menu">
-   more_horiz
-   </span>
-         </div>
-         <div class="note-body">
-         ${event.content}
-         </div>
-         <hr>
-         <div class="note-card-footer">
-             <div class="note-comments footer-icon">
-             <span class="material-symbols-outlined"> chat_bubble </span>
-             </div>
-   
-             <div class="note-likes footer-icon">
-             <span class="material-symbols-outlined"> favorite </span>
-             </div>
-   
-             <div class="note-share footer-icon">
-             <span class="material-symbols-outlined"> share </span>
-             </div>
-   
-             <div class="note-bolt footer-icon">
-             <span class="material-symbols-outlined">
-             bolt
-             </span>
-             </div>
-   
-             <div class="note-share footer-icon">
-         </div>
-         `;
+      const header = document.createElement("div");
+      header.classList.add("note-card-header");
+      const profilePicture = document.createElement("div");
+      profilePicture.classList.add("note-profile-picture");
+      const img = document.createElement("img");
+      img.src = picture;
+      img.alt = "profile picture";
+      img.classList.add("profile-pic");
+      profilePicture.appendChild(img);
+      header.appendChild(profilePicture);
+      const username = document.createElement("p");
+      username.classList.add(
+        "note-profile-username",
+        "username-el",
+        "note-title"
+      );
+      username.textContent = name;
+      header.appendChild(username);
+      const date = document.createElement("p");
+      date.classList.add("note-date", "gray-font");
+      date.textContent = `\u2022 ${formatTimeElapsed(event.created_at + "000")}`;
+      header.appendChild(date);
+      const moreMenu = document.createElement("span");
+      moreMenu.classList.add("material-symbols-outlined", "note-more-menu");
+      moreMenu.textContent = "more_horiz";
+      header.appendChild(moreMenu);
+      noteCard.appendChild(header);
+      const body = document.createElement("div");
+      body.classList.add("note-body");
+      body.textContent = event.content;
+      noteCard.appendChild(body);
+      const hr = document.createElement("hr");
+      noteCard.appendChild(hr);
+      const footer = document.createElement("div");
+      footer.classList.add("note-card-footer");
+      const comments = document.createElement("div");
+      comments.classList.add("note-comments", "footer-icon");
+      const commentsIcon = document.createElement("span");
+      commentsIcon.classList.add("material-symbols-outlined");
+      commentsIcon.textContent = "chat_bubble";
+      comments.appendChild(commentsIcon);
+      footer.appendChild(comments);
+      const likes = document.createElement("div");
+      likes.classList.add("note-likes", "footer-icon");
+      const likesIcon = document.createElement("span");
+      likesIcon.classList.add("material-symbols-outlined");
+      likesIcon.textContent = "favorite";
+      likes.appendChild(likesIcon);
+      footer.appendChild(likes);
+      const share = document.createElement("div");
+      share.classList.add("note-share", "footer-icon");
+      const shareIcon = document.createElement("span");
+      shareIcon.classList.add("material-symbols-outlined");
+      shareIcon.textContent = "share";
+      share.appendChild(shareIcon);
+      footer.appendChild(share);
+      const bolt = document.createElement("div");
+      bolt.classList.add("note-bolt", "footer-icon");
+      const boltIcon = document.createElement("span");
+      boltIcon.classList.add("material-symbols-outlined");
+      boltIcon.textContent = "bolt";
+      bolt.appendChild(boltIcon);
+      footer.appendChild(bolt);
+      noteCard.appendChild(footer);
       document.querySelector(".notes-feed").appendChild(noteCard);
     } else {
       const noteCard = document.createElement("div");
-      const shortenedPubkey = event.pubkey.substring(0, 7);
       noteCard.classList.add("note-card");
-      noteCard.innerHTML = `
-          <div class="note-card-header">
-              <div class="note-profile-picture">
-              <img
-                  src="https://avatars.dicebear.com/api/big-smile/${event.pubkey}.svg"
-                  alt="profile picture"
-                  class="profile-pic"
-              />
-              </div>
-
-              <p class="note-profile-username username-el note-title"> ${shortenedPubkey}</p>
-              
-              <p class="note-date gray-font"> \u2022 ${formatTimeElapsed(
-        event.created_at + "000"
-      )}</p>
-   
-              <span class="material-symbols-outlined note-more-menu">
-   more_horiz
-   </span>
-         </div>
-         <div class="note-body">
-         ${event.content}
-         </div>
-         <hr>
-         <div class="note-card-footer">
-             <div class="note-comments footer-icon">
-             <span class="material-symbols-outlined"> chat_bubble </span>
-             </div>
-   
-             <div class="note-likes footer-icon">
-             <span class="material-symbols-outlined"> favorite </span>
-             </div>
-   
-             <div class="note-share footer-icon">
-             <span class="material-symbols-outlined"> share </span>
-             </div>
-   
-             <div class="note-bolt footer-icon">
-             <span class="material-symbols-outlined">
-             bolt
-             </span>
-             </div>
-   
-             <div class="note-share footer-icon">
-         </div>
-         `;
+      const header = document.createElement("div");
+      header.classList.add("note-card-header");
+      const profilePicture = document.createElement("div");
+      profilePicture.classList.add("note-profile-picture");
+      const img = document.createElement("img");
+      img.src = `https://avatars.dicebear.com/api/big-smile/${event.pubkey}.svg`;
+      img.alt = "profile picture";
+      img.classList.add("profile-pic");
+      profilePicture.appendChild(img);
+      header.appendChild(profilePicture);
+      const shortenedPubkey = event.pubkey.substring(0, 7);
+      const username = document.createElement("p");
+      username.classList.add(
+        "note-profile-username",
+        "username-el",
+        "note-title"
+      );
+      username.textContent = shortenedPubkey;
+      header.appendChild(username);
+      const date = document.createElement("p");
+      date.classList.add("note-date", "gray-font");
+      date.textContent = `\u2022 ${formatTimeElapsed(event.created_at + "000")}`;
+      header.appendChild(date);
+      const moreMenu = document.createElement("span");
+      moreMenu.classList.add("material-symbols-outlined", "note-more-menu");
+      moreMenu.textContent = "more_horiz";
+      header.appendChild(moreMenu);
+      noteCard.appendChild(header);
+      const body = document.createElement("div");
+      body.classList.add("note-body");
+      body.textContent = event.content;
+      noteCard.appendChild(body);
+      const hr = document.createElement("hr");
+      noteCard.appendChild(hr);
+      const footer = document.createElement("div");
+      footer.classList.add("note-card-footer");
+      const comments = document.createElement("div");
+      comments.classList.add("note-comments", "footer-icon");
+      const commentsIcon = document.createElement("span");
+      commentsIcon.classList.add("material-symbols-outlined");
+      commentsIcon.textContent = "chat_bubble";
+      comments.appendChild(commentsIcon);
+      footer.appendChild(comments);
+      const likes = document.createElement("div");
+      likes.classList.add("note-likes", "footer-icon");
+      const likesIcon = document.createElement("span");
+      likesIcon.classList.add("material-symbols-outlined");
+      likesIcon.textContent = "favorite";
+      likes.appendChild(likesIcon);
+      footer.appendChild(likes);
+      noteCard.appendChild(footer);
       document.querySelector(".notes-feed").appendChild(noteCard);
     }
   }
