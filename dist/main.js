@@ -7462,7 +7462,6 @@ zoo`.split("\n");
       footer.appendChild(bolt);
       noteCard.appendChild(footer);
       document.querySelector(".notes-feed").appendChild(noteCard);
-      console.log("Note card created");
     } else {
       const noteCard = document.createElement("div");
       noteCard.classList.add("note-card");
@@ -7516,6 +7515,20 @@ zoo`.split("\n");
       likesIcon.textContent = "favorite";
       likes.appendChild(likesIcon);
       footer.appendChild(likes);
+      const share = document.createElement("div");
+      share.classList.add("note-share", "footer-icon");
+      const shareIcon = document.createElement("span");
+      shareIcon.classList.add("material-symbols-outlined");
+      shareIcon.textContent = "share";
+      share.appendChild(shareIcon);
+      footer.appendChild(share);
+      const bolt = document.createElement("div");
+      bolt.classList.add("note-bolt", "footer-icon");
+      const boltIcon = document.createElement("span");
+      boltIcon.classList.add("material-symbols-outlined");
+      boltIcon.textContent = "bolt";
+      bolt.appendChild(boltIcon);
+      footer.appendChild(bolt);
       noteCard.appendChild(footer);
       document.querySelector(".notes-feed").appendChild(noteCard);
     }
@@ -7540,7 +7553,6 @@ zoo`.split("\n");
         if (event.kind === 0) {
           extractAndStoreData(event);
         } else if (event.kind === 1) {
-          console.log("we got and display a new event kind 1:", event);
           createNoteCard(event);
         }
         resolve2(event);
