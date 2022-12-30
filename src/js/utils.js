@@ -121,6 +121,8 @@ export function createNoteCard(event) {
     noteCard.appendChild(footer);
 
     document.querySelector('.notes-feed').appendChild(noteCard);
+
+    console.log('Note card created');
   } else {
     const noteCard = document.createElement('div');
     noteCard.classList.add('note-card');
