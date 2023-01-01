@@ -28,8 +28,11 @@ export function extractAndStoreData(obj) {
   );
 }
 
+// Create note card
+
 export function createNoteCard(event) {
   const storedData = localStorage.getItem(event.pubkey);
+  let imgUrl = checkForImgUrlInString(event.content);
 
   if (storedData) {
     let { name, picture } = JSON.parse(storedData);
@@ -76,7 +79,15 @@ export function createNoteCard(event) {
 
     const body = document.createElement('div');
     body.classList.add('note-body');
+
     body.textContent = event.content;
+    if (imgUrl) {
+      const bodyImg = document.createElement('img');
+      bodyImg.classList.add('note-body-img');
+      bodyImg.src = imgUrl;
+      body.appendChild(bodyImg);
+    }
+
     noteCard.appendChild(body);
 
     const hr = document.createElement('hr');
@@ -164,6 +175,14 @@ export function createNoteCard(event) {
     const body = document.createElement('div');
     body.classList.add('note-body');
     body.textContent = event.content;
+
+    if (imgUrl) {
+      const bodyImg = document.createElement('img');
+      bodyImg.classList.add('note-body-img');
+      bodyImg.src = imgUrl;
+      body.appendChild(bodyImg);
+    }
+
     noteCard.appendChild(body);
 
     const hr = document.createElement('hr');

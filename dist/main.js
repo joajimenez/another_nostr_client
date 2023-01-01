@@ -7390,6 +7390,7 @@ zoo`.split("\n");
   }
   function createNoteCard(event) {
     const storedData = localStorage.getItem(event.pubkey);
+    let imgUrl = checkForImgUrlInString(event.content);
     if (storedData) {
       let { name, picture } = JSON.parse(storedData);
       if (picture === void 0 || picture === null) {
@@ -7427,6 +7428,12 @@ zoo`.split("\n");
       const body = document.createElement("div");
       body.classList.add("note-body");
       body.textContent = event.content;
+      if (imgUrl) {
+        const bodyImg = document.createElement("img");
+        bodyImg.classList.add("note-body-img");
+        bodyImg.src = imgUrl;
+        body.appendChild(bodyImg);
+      }
       noteCard.appendChild(body);
       const hr = document.createElement("hr");
       noteCard.appendChild(hr);
@@ -7496,6 +7503,12 @@ zoo`.split("\n");
       const body = document.createElement("div");
       body.classList.add("note-body");
       body.textContent = event.content;
+      if (imgUrl) {
+        const bodyImg = document.createElement("img");
+        bodyImg.classList.add("note-body-img");
+        bodyImg.src = imgUrl;
+        body.appendChild(bodyImg);
+      }
       noteCard.appendChild(body);
       const hr = document.createElement("hr");
       noteCard.appendChild(hr);
@@ -7533,10 +7546,28 @@ zoo`.split("\n");
       document.querySelector(".notes-feed").appendChild(noteCard);
     }
   }
+  function checkForImgUrlInString(string) {
+    const regex = /(https?:\/\/.*\.(?:png|jpg|jpeg|gif))/gi;
+    const found = string.match(regex);
+    if (found) {
+      return found[0];
+    }
+  }
 
   // src/js/index.js
-  async function connectToRelay() {
-    const relay = relayInit("wss://nostr-pub.wellorder.net");
+  var userProfilePic = document.querySelector(".top-navbar");
+  var relayPool = [
+    "wss://nostr.ono.re",
+    "wss://brb.io",
+    "wss://nostr-pub.semisol.dev",
+    "wss://nostr-pub.wellorder.net",
+    "wss://nostr-relay.alekberg.net",
+    "wss://nostr-relay.wlvs.space",
+    "wss://relay.nostr.info",
+    "wss://nostr.bitcoiner.social"
+  ];
+  async function connectToRelay(relayUrl) {
+    const relay = relayInit(relayUrl);
     await relay.connect();
     relay.on("connect", () => {
       console.log(`connected to ${relay.url}`);
@@ -7549,23 +7580,32 @@ zoo`.split("\n");
   async function getEvents(relay) {
     return new Promise((resolve2) => {
       const sub2 = relay.sub([{ kinds: [0, 1], limit: 100 }]);
+      const processedEvents = /* @__PURE__ */ new Set();
       sub2.on("event", (event) => {
-        if (event.kind === 0) {
-          extractAndStoreData(event);
-        } else if (event.kind === 1) {
-          createNoteCard(event);
+        if (!processedEvents.has(event.id)) {
+          processedEvents.add(event.id);
+          if (event.kind === 0) {
+            extractAndStoreData(event);
+          } else if (event.kind === 1) {
+            createNoteCard(event);
+          }
         }
-        resolve2(event);
       });
       sub2.on("eose", () => {
         sub2.unsub();
+        resolve2();
       });
     });
   }
   async function main() {
-    const relay = await connectToRelay();
-    const event = await getEvents(relay);
-    await createNoteCard(event);
+    const relays = [];
+    for (const relayUrl of relayPool) {
+      relays.push(await connectToRelay(relayUrl));
+    }
+    for (const relay of relays) {
+      const event = await getEvents(relay);
+      await createNoteCard(event);
+    }
     hideNavbar();
   }
   function hideNavbar() {
@@ -7580,6 +7620,12 @@ zoo`.split("\n");
       prevScrollpos = currentScrollPos;
     };
   }
+  userProfilePic.addEventListener("click", () => {
+    function navigateToUserProfile() {
+      window.location.href = "dist/pages/user_profile.html";
+    }
+    navigateToUserProfile();
+  });
   main();
 })();
 /*! Bundled license information:

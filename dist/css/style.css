@@ -13,6 +13,7 @@ body {
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  overflow-x: hidden;
 }
 
 .slab-font {
@@ -47,7 +48,7 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 0.5rem 1rem;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.644);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   position: fixed;
@@ -67,6 +68,13 @@ body {
   /* align-items: center; */
   width: 100%;
   margin-top: 4rem;
+}
+
+.note-body-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 5px;
 }
 
 .note-card {
@@ -91,6 +99,10 @@ body {
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 50%;
+}
+
+.profile-pic:hover {
+  cursor: pointer;
 }
 
 .note-card .note-card-header .note-title {
