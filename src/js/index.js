@@ -6,8 +6,6 @@ import {
   signEvent,
 } from 'nostr-tools';
 
-const userProfilePic = document.querySelector('.top-navbar');
-
 // import { formatTimeElapsed } from './utils';
 import { extractAndStoreData } from './utils';
 import { createNoteCard } from './utils';
@@ -131,6 +129,8 @@ function hideNavbar() {
     prevScrollpos = currentScrollPos;
   };
 }
+
+const userProfilePic = document.querySelector('.top-navbar');
 
 userProfilePic.addEventListener('click', () => {
   function navigateToUserProfile() {

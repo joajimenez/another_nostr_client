@@ -9,6 +9,7 @@
     "
     />
     <link rel="stylesheet" href="/dist/css/style.css" />
+    <link rel="stylesheet" href="/dist/css/tabs.css" />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"
@@ -82,40 +83,28 @@
       </nav>
 
       <div class="user-profile-container">
-        <div class="profile">
-          <div class="profile-image">
-            <img
-              src="https://images.unsplash.com/photo-1517436073-3b1b7d1f5c1c?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8cGhvdG98ZW58MHx8MHx8&ixlib=rb-1.2.1&w=1000&q=80"
-              alt=""
-            />
+        <div class="profile-info">
+          <div class="profile-user-bio">
+            <h1 class="profile-user-name">Pyre_3</h1>
+            <p class="user-npub-display">nPub5kkfl490sh2263hsbcm2</p>
+            <p class="user-about-display">Just another Nostr user.</p>
           </div>
-          <div class="profile-user-settings">
-            <h1 class="profile-user-name">janedoe_</h1>
-            <button class="btn profile-edit-btn">Edit Profile</button>
-            <button
-              class="btn profile-settings-btn"
-              aria-label="profile settings"
-            >
-              <i class="fas fa-cog" aria-hidden="true"></i>
-            </button>
-          </div>
-          <div class="profile-stats">
+          <div class="tabs">
             <ul>
-              <li><span class="profile-stat-count">164</span> posts</li>
-              <li><span class="profile-stat-count">188</span> followers</li>
-              <li><span class="profile-stat-count">206</span> following</li>
+              <li><span class="profile-post-count">164</span> posts</li>
+              <li>
+                <span class="profile-following-count">206</span> following
+              </li>
+              <li>
+                <span class="profile-followers-count">188</span> followers
+              </li>
+              <li><span class="profile-relays-count">188</span> relays</li>
             </ul>
-          </div>
-          <div class="profile-bio">
-            <p>
-              <span class="profile-real-name">Jane Doe</span> Lorem ipsum dolor
-              sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
-            </p>
           </div>
         </div>
         <!-- End of profile section -->
 
-        <div class="gallery">
+        <div class="notes-container">
           <div class="gallery-item" tabindex="0">
             <img
               src="https://images.unsplash.com/photo-1517436073-3b1b7d1f5c1c?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8cGhvdG98ZW58MHx8MHx8&ixlib=rb-1.2.1&w=1000&q=80"

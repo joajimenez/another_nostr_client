@@ -7555,7 +7555,6 @@ zoo`.split("\n");
   }
 
   // src/js/index.js
-  var userProfilePic = document.querySelector(".top-navbar");
   var relayPool = [
     "wss://nostr.ono.re",
     "wss://brb.io",
@@ -7620,6 +7619,7 @@ zoo`.split("\n");
       prevScrollpos = currentScrollPos;
     };
   }
+  var userProfilePic = document.querySelector(".top-navbar");
   userProfilePic.addEventListener("click", () => {
     function navigateToUserProfile() {
       window.location.href = "dist/pages/user_profile.html";

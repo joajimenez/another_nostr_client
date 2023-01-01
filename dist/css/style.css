@@ -54,7 +54,7 @@ body {
   position: fixed;
   top: 0;
   width: 100%;
-  transition: top 0.3s; /* Transition effect when sliding down (and up) */
+  transition: top 0.3s; /* Transition effect when sliding .down (and up) */
 }
 
 .top-navbar a:hover {

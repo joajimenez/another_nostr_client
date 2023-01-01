@@ -13,7 +13,6 @@ export function formatTimeElapsed(timestamp) {
 }
 
 // Extract profile data to the local storage
-
 export function extractAndStoreData(obj) {
   // Parse the content field of the object
   const data = JSON.parse(obj.content);
@@ -29,7 +28,6 @@ export function extractAndStoreData(obj) {
 }
 
 // Create note card
-
 export function createNoteCard(event) {
   const storedData = localStorage.getItem(event.pubkey);
   let imgUrl = checkForImgUrlInString(event.content);
@@ -247,13 +245,6 @@ export function getDifferentKindOfEvents(relay) {
   });
 }
 
-// User profile page
-
-export function getUserProfilePage() {
-  const storedData = localStorage.getItem(pubkey);
-
-  const { name, website, nip05, picture } = JSON.parse(storedData);
-}
 
 export function checkForImgUrlInString(string) {
   const regex = /(https?:\/\/.*\.(?:png|jpg|jpeg|gif))/gi;
@@ -271,4 +262,12 @@ export function showImgInNoteCard(string) {
     img.classList.add('note-img');
     return img;
   }
+}
+
+
+// User profile page
+export function getUserProfilePage() {
+  const storedData = localStorage.getItem(pubkey);
+
+  const { name, website, nip05, picture } = JSON.parse(storedData);
 }
