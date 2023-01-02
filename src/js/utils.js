@@ -50,6 +50,7 @@ export function createNoteCard(event) {
     const img = document.createElement('img');
     img.src = picture;
     img.alt = 'profile picture';
+    img.loading = 'lazy';
     img.classList.add('profile-pic');
     profilePicture.appendChild(img);
     header.appendChild(profilePicture);
@@ -144,6 +145,7 @@ export function createNoteCard(event) {
     const img = document.createElement('img');
     img.src = `https://avatars.dicebear.com/api/big-smile/${event.pubkey}.svg`;
     img.alt = 'profile picture';
+    img.loading = 'lazy';
     img.classList.add('profile-pic');
     profilePicture.appendChild(img);
     header.appendChild(profilePicture);
@@ -245,7 +247,6 @@ export function getDifferentKindOfEvents(relay) {
   });
 }
 
-
 export function checkForImgUrlInString(string) {
   const regex = /(https?:\/\/.*\.(?:png|jpg|jpeg|gif))/gi;
   const found = string.match(regex);
@@ -263,7 +264,6 @@ export function showImgInNoteCard(string) {
     return img;
   }
 }
-
 
 // User profile page
 export function getUserProfilePage() {

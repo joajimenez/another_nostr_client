@@ -6,6 +6,8 @@ import {
   signEvent,
 } from 'nostr-tools';
 
+import { lozad } from 'lozad';
+
 // import { formatTimeElapsed } from './utils';
 import { extractAndStoreData } from './utils';
 import { createNoteCard } from './utils';
@@ -56,6 +58,42 @@ async function getEvents(relay) {
           extractAndStoreData(event);
         } else if (event.kind === 1) {
           //console.log('we got and display a new event kind 1:', event);
+          createNoteCard(event);
+        }
+      }
+    });
+    sub.on('eose', () => {
+      sub.unsub();
+      resolve();
+    });
+  });
+}
+
+function getUniqueUserEvents(relay) {
+  return new Promise((resolve) => {
+    // subscribe to events
+    const sub = relay.sub([
+      {
+        authors:
+          'e88a691e98d9987c964521dff60025f60700378a4879180dcbbb4a5027850411',
+        kinds: [0, 1],
+        limit: 100,
+      },
+    ]);
+
+    // Keep track of which events have already been processed
+    const processedEvents = new Set();
+
+    sub.on('event', (event) => {
+      // Only process the event if it hasn't been processed before
+      if (!processedEvents.has(event.id)) {
+        processedEvents.add(event.id);
+
+        if (event.kind === 0) {
+          console.log('Set new event kind 0 to local storage:', event);
+          extractAndStoreData(event);
+        } else if (event.kind === 1) {
+          console.log('we got and display a new event kind 1:', event);
           createNoteCard(event);
         }
       }
@@ -130,14 +168,24 @@ function hideNavbar() {
   };
 }
 
+function navigateToUserProfile() {
+  window.location.href = 'dist/pages/user_profile.html';
+}
+
 const userProfilePic = document.querySelector('.top-navbar');
 
-userProfilePic.addEventListener('click', () => {
-  function navigateToUserProfile() {
-    window.location.href = 'dist/pages/user_profile.html';
+userProfilePic.addEventListener('click', async () => {
+  navigateToUserProfile();
+
+  const relays = [];
+  for (const relayUrl of relayPool) {
+    relays.push(await connectToRelay(relayUrl));
   }
 
-  navigateToUserProfile();
+  for (const relay of relays) {
+    const event = await getUniqueUserEvents(relay);
+    createNoteCard(event);
+  }
 });
 
 main();

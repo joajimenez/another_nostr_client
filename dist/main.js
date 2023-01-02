@@ -3738,6 +3738,63 @@ zoo`.split("\n");
     }
   });
 
+  // node_modules/lozad/dist/lozad.min.js
+  var require_lozad_min = __commonJS({
+    "node_modules/lozad/dist/lozad.min.js"(exports, module2) {
+      !function(t, e) {
+        "object" == typeof exports && "undefined" != typeof module2 ? module2.exports = e() : "function" == typeof define && define.amd ? define(e) : t.lozad = e();
+      }(exports, function() {
+        "use strict";
+        var g = "undefined" != typeof document && document.documentMode, f2 = { rootMargin: "0px", threshold: 0, load: function(t) {
+          if ("picture" === t.nodeName.toLowerCase()) {
+            var e = t.querySelector("img"), r = false;
+            null === e && (e = document.createElement("img"), r = true), g && t.getAttribute("data-iesrc") && (e.src = t.getAttribute("data-iesrc")), t.getAttribute("data-alt") && (e.alt = t.getAttribute("data-alt")), r && t.append(e);
+          }
+          if ("video" === t.nodeName.toLowerCase() && !t.getAttribute("data-src") && t.children) {
+            for (var a = t.children, o = void 0, i = 0; i <= a.length - 1; i++)
+              (o = a[i].getAttribute("data-src")) && (a[i].src = o);
+            t.load();
+          }
+          t.getAttribute("data-poster") && (t.poster = t.getAttribute("data-poster")), t.getAttribute("data-src") && (t.src = t.getAttribute("data-src")), t.getAttribute("data-srcset") && t.setAttribute("srcset", t.getAttribute("data-srcset"));
+          var n = ",";
+          if (t.getAttribute("data-background-delimiter") && (n = t.getAttribute("data-background-delimiter")), t.getAttribute("data-background-image"))
+            t.style.backgroundImage = "url('" + t.getAttribute("data-background-image").split(n).join("'),url('") + "')";
+          else if (t.getAttribute("data-background-image-set")) {
+            var d = t.getAttribute("data-background-image-set").split(n), u = d[0].substr(0, d[0].indexOf(" ")) || d[0];
+            u = -1 === u.indexOf("url(") ? "url(" + u + ")" : u, 1 === d.length ? t.style.backgroundImage = u : t.setAttribute("style", (t.getAttribute("style") || "") + "background-image: " + u + "; background-image: -webkit-image-set(" + d + "); background-image: image-set(" + d + ")");
+          }
+          t.getAttribute("data-toggle-class") && t.classList.toggle(t.getAttribute("data-toggle-class"));
+        }, loaded: function() {
+        } };
+        function A(t) {
+          t.setAttribute("data-loaded", true);
+        }
+        var m = function(t) {
+          return "true" === t.getAttribute("data-loaded");
+        }, v = function(t) {
+          var e = 1 < arguments.length && void 0 !== arguments[1] ? arguments[1] : document;
+          return t instanceof Element ? [t] : t instanceof NodeList ? t : e.querySelectorAll(t);
+        };
+        return function() {
+          var r, a, o = 0 < arguments.length && void 0 !== arguments[0] ? arguments[0] : ".lozad", t = 1 < arguments.length && void 0 !== arguments[1] ? arguments[1] : {}, e = Object.assign({}, f2, t), i = e.root, n = e.rootMargin, d = e.threshold, u = e.load, g2 = e.loaded, s = void 0;
+          "undefined" != typeof window && window.IntersectionObserver && (s = new IntersectionObserver((r = u, a = g2, function(t2, e2) {
+            t2.forEach(function(t3) {
+              (0 < t3.intersectionRatio || t3.isIntersecting) && (e2.unobserve(t3.target), m(t3.target) || (r(t3.target), A(t3.target), a(t3.target)));
+            });
+          }), { root: i, rootMargin: n, threshold: d }));
+          for (var c, l = v(o, i), b = 0; b < l.length; b++)
+            (c = l[b]).getAttribute("data-placeholder-background") && (c.style.background = c.getAttribute("data-placeholder-background"));
+          return { observe: function() {
+            for (var t2 = v(o, i), e2 = 0; e2 < t2.length; e2++)
+              m(t2[e2]) || (s ? s.observe(t2[e2]) : (u(t2[e2]), A(t2[e2]), g2(t2[e2])));
+          }, triggerLoad: function(t2) {
+            m(t2) || (u(t2), A(t2), g2(t2));
+          }, observer: s };
+        };
+      });
+    }
+  });
+
   // node_modules/@noble/secp256k1/lib/esm/index.js
   var nodeCrypto = __toESM(require_crypto(), 1);
   var _0n = BigInt(0);
@@ -7367,6 +7424,9 @@ zoo`.split("\n");
   utils.hmacSha256Sync = (key, ...msgs) => hmac2(sha256, key, utils.concatBytes(...msgs));
   utils.sha256Sync = (...msgs) => sha256(utils.concatBytes(...msgs));
 
+  // src/js/index.js
+  var import_lozad = __toESM(require_lozad_min());
+
   // src/js/utils.js
   function formatTimeElapsed(timestamp) {
     const elapsed = Date.now() - parseInt(timestamp);
@@ -7405,6 +7465,7 @@ zoo`.split("\n");
       const img = document.createElement("img");
       img.src = picture;
       img.alt = "profile picture";
+      img.loading = "lazy";
       img.classList.add("profile-pic");
       profilePicture.appendChild(img);
       header.appendChild(profilePicture);
@@ -7479,6 +7540,7 @@ zoo`.split("\n");
       const img = document.createElement("img");
       img.src = `https://avatars.dicebear.com/api/big-smile/${event.pubkey}.svg`;
       img.alt = "profile picture";
+      img.loading = "lazy";
       img.classList.add("profile-pic");
       profilePicture.appendChild(img);
       header.appendChild(profilePicture);
@@ -7596,6 +7658,34 @@ zoo`.split("\n");
       });
     });
   }
+  function getUniqueUserEvents(relay) {
+    return new Promise((resolve2) => {
+      const sub2 = relay.sub([
+        {
+          authors: "e88a691e98d9987c964521dff60025f60700378a4879180dcbbb4a5027850411",
+          kinds: [0, 1],
+          limit: 100
+        }
+      ]);
+      const processedEvents = /* @__PURE__ */ new Set();
+      sub2.on("event", (event) => {
+        if (!processedEvents.has(event.id)) {
+          processedEvents.add(event.id);
+          if (event.kind === 0) {
+            console.log("Set new event kind 0 to local storage:", event);
+            extractAndStoreData(event);
+          } else if (event.kind === 1) {
+            console.log("we got and display a new event kind 1:", event);
+            createNoteCard(event);
+          }
+        }
+      });
+      sub2.on("eose", () => {
+        sub2.unsub();
+        resolve2();
+      });
+    });
+  }
   async function main() {
     const relays = [];
     for (const relayUrl of relayPool) {
@@ -7619,12 +7709,20 @@ zoo`.split("\n");
       prevScrollpos = currentScrollPos;
     };
   }
+  function navigateToUserProfile() {
+    window.location.href = "dist/pages/user_profile.html";
+  }
   var userProfilePic = document.querySelector(".top-navbar");
-  userProfilePic.addEventListener("click", () => {
-    function navigateToUserProfile() {
-      window.location.href = "dist/pages/user_profile.html";
-    }
+  userProfilePic.addEventListener("click", async () => {
     navigateToUserProfile();
+    const relays = [];
+    for (const relayUrl of relayPool) {
+      relays.push(await connectToRelay(relayUrl));
+    }
+    for (const relay of relays) {
+      const event = await getUniqueUserEvents(relay);
+      createNoteCard(event);
+    }
   });
   main();
 })();
@@ -7638,6 +7736,11 @@ zoo`.split("\n");
 
 @scure/bip39/index.js:
   (*! scure-bip39 - MIT License (c) 2022 Patricio Palladino, Paul Miller (paulmillr.com) *)
+
+lozad/dist/lozad.min.js:
+  (*! lozad.js - v1.16.0 - 2020-09-06
+  * https://github.com/ApoorvSaxena/lozad.js
+  * Copyright (c) 2020 Apoorv Saxena; Licensed MIT *)
 
 @noble/secp256k1/lib/esm/index.js:
   (*! noble-secp256k1 - MIT License (c) 2019 Paul Miller (paulmillr.com) *)
