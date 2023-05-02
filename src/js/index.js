@@ -17,7 +17,7 @@ const relayPool = [
   'wss://brb.io',
   'wss://nostr-pub.semisol.dev',
   'wss://nostr-pub.wellorder.net',
-  'wss://nostr-relay.alekberg.net',
+  // 'wss://nostr-relay.alekberg.net',
   'wss://nostr-relay.wlvs.space',
   'wss://relay.nostr.info',
   'wss://nostr.bitcoiner.social',
