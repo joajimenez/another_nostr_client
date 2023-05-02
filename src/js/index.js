@@ -13,7 +13,7 @@ import { extractAndStoreData } from './utils';
 import { createNoteCard } from './utils';
 
 const relayPool = [
-  'wss://nostr.ono.re',
+  // 'wss://nostr.ono.re',
   'wss://brb.io',
   'wss://nostr-pub.semisol.dev',
   'wss://nostr-pub.wellorder.net',
